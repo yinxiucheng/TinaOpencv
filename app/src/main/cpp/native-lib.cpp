@@ -1,8 +1,10 @@
 #include <jni.h>
 #include <string>
 #include <opencv2/opencv.hpp>
+#include <android/native_window_jni.h>
 
 using namespace cv;
+ANativeWindow *window = 0;
 
 
 class CascadeDetectorAdapter : public DetectionBasedTracker::IDetector {
@@ -63,8 +65,11 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_tina_tinaopencv_MainActivity_setSurface(JNIEnv *env, jobject instance, jobject surface) {
 
-    // TODO
-
+    if (window) {
+        ANativeWindow_release(window);
+        window = 0;
+    }
+    window = ANativeWindow_fromSurface(env, surface);
 }
 
 
@@ -74,7 +79,6 @@ Java_com_tina_tinaopencv_MainActivity_postData(JNIEnv *env, jobject instance, jb
                                                jint w, jint h, jint cameraId) {
     jbyte *data = env->GetByteArrayElements(data_, NULL);
 
-    // TODO
 
     env->ReleaseByteArrayElements(data_, data, 0);
 }
@@ -83,7 +87,9 @@ Java_com_tina_tinaopencv_MainActivity_postData(JNIEnv *env, jobject instance, jb
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_tina_tinaopencv_MainActivity_release(JNIEnv *env, jobject instance) {
-
-    // TODO
-
+    if (tracker) {
+        tracker->stop();
+        delete tracker;
+        tracker = 0;
+    }
 }
