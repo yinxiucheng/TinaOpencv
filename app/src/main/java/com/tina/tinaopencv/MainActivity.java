@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements Camera.PreviewCal
         surfaceView.getHolder().addCallback(this);
         cameraHelper = new CameraHelper(cameraId);
         cameraHelper.setPreviewCallback(this);
+        cameraHelper.setPreviewDisplay(surfaceView.getHolder());
 
         Utils.copyAssets(this, "lbpcascade_frontalface.xml");
     }

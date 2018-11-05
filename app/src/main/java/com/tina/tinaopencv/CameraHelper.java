@@ -4,6 +4,7 @@ import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
+import android.view.SurfaceHolder;
 
 import java.io.IOException;
 
@@ -21,9 +22,14 @@ public class CameraHelper implements Camera.PreviewCallback {
     private Camera mCamera;
     private byte[] buffer;
     private Camera.PreviewCallback mPreviewCallback;
+    SurfaceHolder mSurfaceHolder;
 
     public CameraHelper(int cameraId){
         mCameraId = cameraId;
+    }
+
+    public void setPreviewDisplay(SurfaceHolder surfaceHolder) {
+        mSurfaceHolder = surfaceHolder;
     }
 
     public void switchCamera(){
@@ -56,6 +62,8 @@ public class CameraHelper implements Camera.PreviewCallback {
             //设置预览画面
             SurfaceTexture surfaceTexture = new SurfaceTexture(11);
             mCamera.setPreviewTexture(surfaceTexture);
+
+//            mCamera.setPreviewDisplay(mSurfaceHolder);
 
             mCamera.startPreview();
         } catch (IOException e) {
